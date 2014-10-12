@@ -1,100 +1,27 @@
 package me.bigteddy98.packetapi;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import me.bigteddy98.packetapi.api.Reflection;
-import me.bigteddy98.packetapi.collections.Animation;
-import me.bigteddy98.packetapi.collections.Particle;
+import me.bigteddy98.packetapi.collections.*;
 import me.bigteddy98.packetapi.collections.Slot;
-import me.bigteddy98.packetapi.collections.StateChange;
-import me.bigteddy98.packetapi.collections.Status;
-import me.bigteddy98.packetapi.collections.WorldDataConverter;
-import net.minecraft.server.v1_7_R4.Block;
-import net.minecraft.server.v1_7_R4.ChatComponentText;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.*;
 import net.minecraft.server.v1_7_R4.Item;
-import net.minecraft.server.v1_7_R4.MobEffect;
-import net.minecraft.server.v1_7_R4.PacketPlayOutAbilities;
-import net.minecraft.server.v1_7_R4.PacketPlayOutAttachEntity;
-import net.minecraft.server.v1_7_R4.PacketPlayOutBed;
-import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_7_R4.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.server.v1_7_R4.PacketPlayOutBlockChange;
-import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
-import net.minecraft.server.v1_7_R4.PacketPlayOutCloseWindow;
-import net.minecraft.server.v1_7_R4.PacketPlayOutCollect;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntity;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEffect;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityStatus;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityTeleport;
-import net.minecraft.server.v1_7_R4.PacketPlayOutEntityVelocity;
-import net.minecraft.server.v1_7_R4.PacketPlayOutExperience;
-import net.minecraft.server.v1_7_R4.PacketPlayOutExplosion;
-import net.minecraft.server.v1_7_R4.PacketPlayOutGameStateChange;
-import net.minecraft.server.v1_7_R4.PacketPlayOutHeldItemSlot;
-import net.minecraft.server.v1_7_R4.PacketPlayOutKeepAlive;
-import net.minecraft.server.v1_7_R4.PacketPlayOutKickDisconnect;
-import net.minecraft.server.v1_7_R4.PacketPlayOutMap;
-import net.minecraft.server.v1_7_R4.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_7_R4.PacketPlayOutMapChunkBulk;
-import net.minecraft.server.v1_7_R4.PacketPlayOutMultiBlockChange;
-import net.minecraft.server.v1_7_R4.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_7_R4.PacketPlayOutNamedSoundEffect;
-import net.minecraft.server.v1_7_R4.PacketPlayOutOpenSignEditor;
-import net.minecraft.server.v1_7_R4.PacketPlayOutOpenWindow;
-import net.minecraft.server.v1_7_R4.PacketPlayOutPosition;
-import net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove;
-import net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMoveLook;
-import net.minecraft.server.v1_7_R4.PacketPlayOutRespawn;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSetSlot;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntity;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityExperienceOrb;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityPainting;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityWeather;
-import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnPosition;
-import net.minecraft.server.v1_7_R4.PacketPlayOutStatistic;
-import net.minecraft.server.v1_7_R4.PacketPlayOutTabComplete;
-import net.minecraft.server.v1_7_R4.PacketPlayOutTransaction;
-import net.minecraft.server.v1_7_R4.PacketPlayOutUpdateHealth;
-import net.minecraft.server.v1_7_R4.PacketPlayOutUpdateSign;
-import net.minecraft.server.v1_7_R4.PacketPlayOutUpdateTime;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWindowItems;
-import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
-import net.minecraft.server.v1_7_R4.PlayerAbilities;
-import net.minecraft.server.v1_7_R4.PlayerInteractManager;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
-
+import org.bukkit.*;
 import org.bukkit.Chunk;
-import org.bukkit.Difficulty;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_7_R4.CraftChunk;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftExperienceOrb;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPainting;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.entity.*;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Packet {
 
@@ -106,6 +33,7 @@ public class Packet {
 		abilities.canInstantlyBuild = canInstantlyBuild;
 		abilities.flySpeed = flySpeed;
 		abilities.walkSpeed = walkSpeed;
+
 		return new PacketWrapper(new PacketPlayOutAbilities(abilities));
 	}
 
@@ -125,9 +53,17 @@ public class Packet {
 		return new PacketWrapper(new PacketPlayOutBed(((CraftPlayer) p).getHandle(), bedX, bedY, bedZ));
 	}
 
-	@SuppressWarnings("deprecation")
 	public static PacketWrapper PacketOutBlockAction(int xLoc, int yLoc, int zLoc, int data1, int data2, Material material) {
-		return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, Block.getById(material.getId()), data2, data1));
+		try {
+            return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, Block.getById(material.getId()), data2, data1));
+        } catch (Exception e) {
+            try {
+                return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, (Block) Block.class.getMethod("e", int.class).invoke(material.getId()), data2, data1));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	public static PacketWrapper PacketPlayOutBlockBreakAnimation(int breakId, int xLoc, int yLoc, int zLoc, byte destroy_stage) {
@@ -179,7 +115,16 @@ public class Packet {
 	}
 
 	public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean bool) {
-		return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool));
+		try {
+            return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool));
+        } catch (Exception e){
+            try {
+                return new PacketWrapper(PacketPlayOutEntityTeleport.class.getConstructor(int.class, int.class, int.class, int.class, byte.class, byte.class).newInstance(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F))));
+            } catch (Exception e1){
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	public static PacketWrapper PacketPlayOutEntityVelocity(int entity_id, Entity e) {
@@ -211,15 +156,42 @@ public class Packet {
 	}
 
 	public static PacketWrapper PacketPlayOutMap(int damage_value, byte[] data, byte scale) {
-		return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
+		try {
+            return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
+        } catch (Exception e){
+            try {
+                return new PacketWrapper(PacketPlayOutMap.class.getConstructor(int.class, byte.class).newInstance(damage_value, data));
+            } catch (Exception e1){
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	public static PacketWrapper PacketPlayOutMapChunk(Chunk chunk, boolean flag, int paramInt, int version) {
-		return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt, version));
-	}
+        try {
+            return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt, version));
+        } catch (Exception e){
+            try { // R3, R2
+                return new PacketWrapper(PacketPlayOutMapChunk.class.getConstructor(net.minecraft.server.v1_7_R4.Chunk.class, boolean.class, int.class).newInstance(((CraftChunk) chunk).getHandle(), flag, paramInt));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
+    }
 
 	public static PacketWrapper PacketPlayOutMapChunkBulk(List<Chunk> chunks, int version) {
-		return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks), version));
+        try {
+            return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks), version));
+        } catch (Exception e){
+            try { // R3, R2
+                return new PacketWrapper(PacketPlayOutMapChunkBulk.class.getConstructor(List.class).newInstance(convert(chunks)));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	private static List<net.minecraft.server.v1_7_R4.Chunk> convert(List<Chunk> chunks) {
@@ -241,8 +213,17 @@ public class Packet {
 	public static PacketWrapper PacketPlayOutNamedEntitySpawn(Player randomOnlinePlayer, GameProfile profile, int x, int y, int z, byte yaw, byte pitch, int itemInHand) {
 		EntityHuman entity = new EntityPlayer(((CraftPlayer) randomOnlinePlayer).getHandle().server, ((CraftPlayer) randomOnlinePlayer).getHandle().r(), profile, new PlayerInteractManager(((CraftPlayer) randomOnlinePlayer).getHandle().world));
 		entity.setLocation(x, y, z, yaw, pitch);
-		entity.setEquipment(0, new net.minecraft.server.v1_7_R4.ItemStack(Item.getById(itemInHand)));
-		return new PacketWrapper(new PacketPlayOutNamedEntitySpawn(entity));
+        try { // R3 , R2
+            entity.setEquipment(0, new net.minecraft.server.v1_7_R4.ItemStack(Item.getById(itemInHand)));
+        } catch (Exception e){
+            try {
+                entity.setEquipment(0, new net.minecraft.server.v1_7_R4.ItemStack( (Item) Item.class.getMethod("d", int.class).invoke(itemInHand) ));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        return new PacketWrapper(new PacketPlayOutNamedEntitySpawn(entity));
 	}
 
 	public static PacketWrapper PacketPlayOutNamedSoundEffect(String name, int locX, int locY, int locZ, float volume, float pitch) {
@@ -266,11 +247,29 @@ public class Packet {
 	}
 
 	public static PacketWrapper PacketPlayOutRelEntityMove(int entity_id, byte DX, byte DY, byte DZ, boolean isOnGround) {
-		return new PacketWrapper(new PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
+		try { // R3, R2
+            return new PacketWrapper(new net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
+        } catch (Exception e){
+            try {
+                return new PacketWrapper(PacketPlayOutRelEntityMove.class.getConstructor(int.class, byte.class, byte.class, byte.class).newInstance(entity_id, DX, DY, DZ));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	public static PacketWrapper PacketPlayOutRelEntityMoveLook(int entity_id, byte DX, byte DY, byte DZ, byte yaw, byte pitch, boolean isOnGround) {
-		return new PacketWrapper(new PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
+		try{
+            return new PacketWrapper(new PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
+        } catch (Exception e){
+            try {
+                return new PacketWrapper(PacketPlayOutRelEntityMoveLook.class.getConstructor(int.class, byte.class, byte.class, byte.class, byte.class, byte.class).newInstance(entity_id, DX, DY, DZ, yaw, pitch));
+            } catch (Exception e1){
+                e1.printStackTrace();
+                return null;
+            }
+        }
 	}
 
 	public static PacketWrapper PacketPlayOutRespawn(Environment dimension, Difficulty diff, GameMode gamemode) {
@@ -349,4 +348,6 @@ public class Packet {
 	public static PacketWrapper PacketPlayOutWorldParticles(Particle type, float x, float y, float z, float offSetX, float offSetY, float offSetZ, float particleData, int amount) {
 		return new PacketWrapper(new PacketPlayOutWorldParticles(type.getName(), x, y, z, offSetX, offSetY, offSetZ, particleData, amount));
 	}
+
+
 }
