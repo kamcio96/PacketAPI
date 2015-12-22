@@ -1,4 +1,5 @@
 name: ${project.name}
-main: me.bigteddy98.packetapi.PacketAPI
+main: pl.kamcio96.packetapi.PacketAPI
 version: ${project.version}
 authors: [bigteddy98, kamcio96]
+load: STARTUP
