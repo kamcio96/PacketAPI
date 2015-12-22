@@ -3,12 +3,8 @@ package pl.kamcio96.packetapi;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spigotmc.SpigotConfig;
-import pl.kamcio96.packetapi.api.PacketRecieveEvent;
-import pl.kamcio96.packetapi.api.PacketSendEvent;
 
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -46,7 +42,7 @@ public class PacketAPI extends JavaPlugin {
             }
 
             f.set(mcserver, new PacketAPIServerConnection(mcserver));
-            getLogger().log(Level.INFO, "[PacketAPI] All works fine ;)");
+            getLogger().log(Level.INFO, "All works fine ;)");
         } catch (Exception e) {
             getServer().getConsoleSender().sendMessage("[PacketAPI] " + ChatColor.RED + "Fatal error: ");
             e.printStackTrace();

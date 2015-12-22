@@ -1,9 +1,6 @@
 package pl.kamcio96.packetapi.api;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-
-import java.net.InetAddress;
 
 public class PacketSendEvent extends PacketEvent {
 
@@ -15,8 +12,8 @@ public class PacketSendEvent extends PacketEvent {
 
 	/*===========================================================*/
 
-    public PacketSendEvent(PacketWrapper packet, Player player, InetAddress address) {
-        super(packet, player, address);
+    public PacketSendEvent(PacketWrapper packet, Connection connection) {
+        super(packet, connection);
     }
 
     @Override

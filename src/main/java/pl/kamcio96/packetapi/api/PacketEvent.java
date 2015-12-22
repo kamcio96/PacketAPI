@@ -1,23 +1,18 @@
 package pl.kamcio96.packetapi.api;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
-
-import java.net.InetAddress;
 
 abstract class PacketEvent extends Event implements Cancellable {
 
     private PacketWrapper packet;
-    private Player player;
-    private InetAddress address;
+    private Connection connection;
     private boolean cancelled = false;
 
-    public PacketEvent(PacketWrapper packet, Player player, InetAddress address) {
+    public PacketEvent(PacketWrapper packet, Connection connection) {
         super(true);
         this.packet = packet;
-        this.player = player;
-        this.address = address;
+        this.connection = connection;
     }
 
     public PacketWrapper getPacket() {
@@ -32,16 +27,8 @@ abstract class PacketEvent extends Event implements Cancellable {
         this.cancelled = cancel;
     }
 
-    public boolean hasPlayer() {
-        return player != null;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public InetAddress getAddress() {
-        return address;
+    public Connection getConnection() {
+        return connection;
     }
 
 }

@@ -7,13 +7,15 @@ import net.minecraft.util.io.netty.channel.ChannelHandlerContext;
 import net.minecraft.util.io.netty.channel.ChannelPromise;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import pl.kamcio96.packetapi.api.Connection;
 import pl.kamcio96.packetapi.api.PacketRecieveEvent;
 import pl.kamcio96.packetapi.api.PacketSendEvent;
 import pl.kamcio96.packetapi.api.PacketWrapper;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
-public class PacketAPIHandler extends ChannelDuplexHandler {
+public class PacketAPIHandler extends ChannelDuplexHandler implements Connection {
 
     private NetworkManager manager;
 
@@ -23,12 +25,7 @@ public class PacketAPIHandler extends ChannelDuplexHandler {
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        Player player = null;
-        if (manager.getPacketListener() instanceof PlayerConnection) {
-            player = ((PlayerConnection) manager.getPacketListener()).getPlayer();
-        }
-
-        PacketSendEvent event = new PacketSendEvent(new PacketWrapper(msg), player, ((InetSocketAddress) manager.getSocketAddress()).getAddress());
+        PacketSendEvent event = new PacketSendEvent(new PacketWrapper(msg), this);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -38,16 +35,46 @@ public class PacketAPIHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Player player = null;
-        if (manager.getPacketListener() instanceof PlayerConnection) {
-            player = ((PlayerConnection) manager.getPacketListener()).getPlayer();
-        }
-
-        PacketRecieveEvent event = new PacketRecieveEvent(new PacketWrapper(msg), player, ((InetSocketAddress) manager.getSocketAddress()).getAddress());
+        PacketRecieveEvent event = new PacketRecieveEvent(new PacketWrapper(msg), this);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
         super.channelRead(ctx, msg);
     }
+
+    @Override
+    public InetAddress getAddress() {
+        return ((InetSocketAddress) manager.getSocketAddress()).getAddress();
+    }
+
+    @Override
+    public boolean hasPlayer() {
+        return getPlayer() != null;
+    }
+
+    @Override
+    public Player getPlayer() {
+        if (manager.getPacketListener() instanceof PlayerConnection) {
+            return ((PlayerConnection) manager.getPacketListener()).getPlayer();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PacketAPIHandler that = (PacketAPIHandler) o;
+
+        return !(manager != null ? !manager.equals(that.manager) : that.manager != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return manager != null ? manager.hashCode() : 0;
+    }
+
 }
