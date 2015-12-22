@@ -12,7 +12,7 @@ Usage:
 You have just 2 simple events (PacketRecieveEvent and PacketSendEvent). You have to use it with bukkit event api.
 
 Requiments:
-- Spigot (or Spigot's fork eg. PaperSpigot or SportBukkit)
+- Spigot (or Spigot's fork eg. PaperSpigot)
 - late-bind enabled in spigot.yml
 
 
