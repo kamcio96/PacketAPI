@@ -5,6 +5,8 @@ import net.minecraft.server.v1_7_R4.ServerPing;
 import net.minecraft.util.com.mojang.authlib.GameProfile;
 import pl.kamcio96.packetapi.api.PacketWrapper;
 
+@Deprecated
+@SuppressWarnings(value = {"TODO class"})
 public class PacketWrapperStatusOutServerInfo extends PacketWrapper {
 
     private ServerPing ping;

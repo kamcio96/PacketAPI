@@ -3,6 +3,8 @@ package pl.kamcio96.packetapi.api.wrapper;
 import pl.kamcio96.packetapi.api.PacketWrapper;
 import pl.kamcio96.packetapi.collections.Animation;
 
+@Deprecated
+@SuppressWarnings(value = {"TODO class"})
 public class PacketWrapperPlayOutAnimation extends PacketWrapper {
 
     public PacketWrapperPlayOutAnimation(Object packet) {
