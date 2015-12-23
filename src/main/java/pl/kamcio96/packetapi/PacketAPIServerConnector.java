@@ -1,11 +1,11 @@
 package pl.kamcio96.packetapi;
 
-import net.minecraft.server.v1_7_R4.*;
-import net.minecraft.util.io.netty.channel.Channel;
-import net.minecraft.util.io.netty.channel.ChannelException;
-import net.minecraft.util.io.netty.channel.ChannelInitializer;
-import net.minecraft.util.io.netty.channel.ChannelOption;
-import net.minecraft.util.io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelException;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import net.minecraft.server.v1_8_R3.*;
 
 public class PacketAPIServerConnector extends ChannelInitializer {
 
@@ -30,10 +30,10 @@ public class PacketAPIServerConnector extends ChannelInitializer {
         channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30))
                 .addLast("legacy_query", new LegacyPingHandler(this.conn))
                 .addLast("splitter", new PacketSplitter())
-                .addLast("decoder", new PacketDecoder(NetworkManager.h))
+                .addLast("decoder", new PacketDecoder(EnumProtocolDirection.SERVERBOUND))
                 .addLast("prepender", new PacketPrepender())
-                .addLast("encoder", new PacketEncoder(NetworkManager.h));
-        NetworkManager networkmanager = new NetworkManager(false);
+                .addLast("encoder", new PacketEncoder(EnumProtocolDirection.CLIENTBOUND));
+        NetworkManager networkmanager = new NetworkManager(EnumProtocolDirection.SERVERBOUND);
         conn.getNetworkManagerList().add(networkmanager);
         channel.pipeline().addLast("packetAPI_handler", new PacketAPIHandler(networkmanager));
         channel.pipeline().addLast("packet_handler", networkmanager);

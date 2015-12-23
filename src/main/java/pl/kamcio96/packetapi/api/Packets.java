@@ -1,28 +1,24 @@
 package pl.kamcio96.packetapi.api;
 
-import net.minecraft.server.v1_7_R4.*;
-import net.minecraft.server.v1_7_R4.Item;
-import net.minecraft.util.com.mojang.authlib.GameProfile;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Chunk;
 import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_7_R4.CraftChunk;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.*;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.*;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import pl.kamcio96.packetapi.api.collections.*;
 import pl.kamcio96.packetapi.api.collections.Slot;
 import pl.kamcio96.packetapi.api.wrapper.BlockWrapper;
+import pl.kamcio96.packetapi.api.wrapper.DifficultyWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Packets {
 
@@ -39,7 +35,7 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutAnimation(Player p, Animation animation) {
-        return new PacketWrapper(new net.minecraft.server.v1_7_R4.PacketPlayOutAnimation(((CraftPlayer) p).getHandle(), animation.getId()));
+        return new PacketWrapper(new PacketPlayOutAnimation(((CraftPlayer) p).getHandle(), animation.getId()));
     }
 
     public static PacketWrapper PacketPlayOutAttachEntity(Entity entity1, Entity entity2) {
@@ -51,19 +47,19 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutBed(Player p, int bedX, int bedY, int bedZ) {
-        return new PacketWrapper(new PacketPlayOutBed(((CraftPlayer) p).getHandle(), bedX, bedY, bedZ));
+        return new PacketWrapper(new PacketPlayOutBed(((CraftPlayer) p).getHandle(), new BlockPosition(bedX, bedY, bedZ)));
     }
 
     public static PacketWrapper PacketOutBlockAction(int xLoc, int yLoc, int zLoc, int data1, int data2, Material material) {
-        return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, (Block) BlockWrapper.toMinecraftBlock(material), data2, data1));
+        return new PacketWrapper(new PacketPlayOutBlockAction(new BlockPosition(xLoc, yLoc, zLoc), (Block) BlockWrapper.toMinecraftBlock(material), data2, data1));
     }
 
     public static PacketWrapper PacketPlayOutBlockBreakAnimation(int breakId, int xLoc, int yLoc, int zLoc, byte destroy_stage) {
-        return new PacketWrapper(new PacketPlayOutBlockBreakAnimation(breakId, xLoc, yLoc, zLoc, destroy_stage));
+        return new PacketWrapper(new PacketPlayOutBlockBreakAnimation(breakId, new BlockPosition(xLoc, yLoc, zLoc), destroy_stage));
     }
 
     public static PacketWrapper PacketPlayOutBlockChange(int locX, int locY, int locZ, World world) {
-        return new PacketWrapper(new PacketPlayOutBlockChange(locX, locY, locZ, ((CraftWorld) world).getHandle()));
+        return new PacketWrapper(new PacketPlayOutBlockChange(((CraftWorld) world).getHandle(), new BlockPosition(locX, locY, locZ)));
     }
 
     public static PacketWrapper PacketPlayOutChat(String text) {
@@ -106,8 +102,8 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutEntityStatus(((CraftEntity) entity).getHandle(), type.getId()));
     }
 
-    public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean bool, boolean bool2) {
-        return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool, bool2));
+    public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean bool) {
+        return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool));
     }
 
     public static PacketWrapper PacketPlayOutEntityVelocity(int entity_id, Entity e) {
@@ -119,7 +115,7 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutExplosion(Location loc, float radius) {
-        return new PacketWrapper(new PacketPlayOutExplosion(loc.getX(), loc.getY(), loc.getZ(), radius, new ArrayList<Object>(), null));
+        return new PacketWrapper(new PacketPlayOutExplosion(loc.getX(), loc.getY(), loc.getZ(), radius, new ArrayList<BlockPosition>(), null));
     }
 
     public static PacketWrapper PacketPlayOutGameStateChange(StateChange reason, int value) {
@@ -138,20 +134,20 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutKickDisconnect(new ChatComponentText(text)));
     }
 
-    public static PacketWrapper PacketPlayOutMap(int damage_value, byte[] data, byte scale) {
-        return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
+    //public static PacketWrapper PacketPlayOutMap(int damage_value, byte[] data, byte scale) {
+    //    return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
+    //}
+
+    public static PacketWrapper PacketPlayOutMapChunk(Chunk chunk, boolean flag, int paramInt) {
+        return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt));
     }
 
-    public static PacketWrapper PacketPlayOutMapChunk(Chunk chunk, boolean flag, int paramInt, int version) {
-        return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt, version));
+    public static PacketWrapper PacketPlayOutMapChunkBulk(Set<Chunk> chunks) {
+        return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks)));
     }
 
-    public static PacketWrapper PacketPlayOutMapChunkBulk(Set<Chunk> chunks, int version) {
-        return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks), version));
-    }
-
-    private static List<net.minecraft.server.v1_7_R4.Chunk> convert(Set<Chunk> chunks) {
-        List<net.minecraft.server.v1_7_R4.Chunk> list = new ArrayList<net.minecraft.server.v1_7_R4.Chunk>();
+    private static List<net.minecraft.server.v1_8_R3.Chunk> convert(Set<Chunk> chunks) {
+        List<net.minecraft.server.v1_8_R3.Chunk> list = new ArrayList<net.minecraft.server.v1_8_R3.Chunk>();
         for (Chunk chunk : chunks) {
             list.add(((CraftChunk) chunk).getHandle());
         }
@@ -188,31 +184,31 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutOpenSignEditor(int locX, int locY, int locZ) {
-        return new PacketWrapper(new PacketPlayOutOpenSignEditor(locX, locY, locZ));
+        return new PacketWrapper(new PacketPlayOutOpenSignEditor(new BlockPosition(locX, locY, locZ)));
     }
 
-    public static PacketWrapper PacketPlayOutOpenWindow(int window_id, int inventory_type, String inventory_title, int slot_size, boolean provided_title) {
-        return new PacketWrapper(new PacketPlayOutOpenWindow(window_id, inventory_type, inventory_title, slot_size, provided_title));
-    }
+    //public static PacketWrapper PacketPlayOutOpenWindow(int window_id, String inventory_title, int slot_size, boolean provided_title) {
+    //    return new PacketWrapper(new PacketPlayOutOpenWindow(window_id, inventory_title, slot_size, provided_title));
+    //}
 
-    public static PacketWrapper PacketPlayOutOpenWindow(int window_id, int inventory_type, String inventory_title, int slot_size, boolean provided_title, int horse_entity_id) {
-        return new PacketWrapper(new PacketPlayOutOpenWindow(window_id, inventory_type, inventory_title, slot_size, provided_title, horse_entity_id));
-    }
+    //public static PacketWrapper PacketPlayOutOpenWindow(int window_id, String inventory_title, int slot_size, boolean provided_title, int horse_entity_id) {
+    //    return new PacketWrapper(new PacketPlayOutOpenWindow(window_id, inventory_title, new ChatComponentText(inventory_title), slot_size, provided_title, horse_entity_id));
+    //}
 
-    public static PacketWrapper PacketPlayOutPosition(int locX, int locY, int locZ, int yaw, int pitch, boolean isOnGround) {
-        return new PacketWrapper(new PacketPlayOutPosition(locX, locY, locZ, yaw, pitch, isOnGround));
+    public static PacketWrapper PacketPlayOutPosition(int locX, int locY, int locZ, int yaw, int pitch) {
+        return new PacketWrapper(new PacketPlayOutPosition(locX, locY, locZ, yaw, pitch, new HashSet<PacketPlayOutPosition.EnumPlayerTeleportFlags>()));
     }
 
     public static PacketWrapper PacketPlayOutRelEntityMove(int entity_id, byte DX, byte DY, byte DZ, boolean isOnGround) {
-        return new PacketWrapper(new PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
+        return new PacketWrapper(new PacketPlayOutEntity.PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
     }
 
     public static PacketWrapper PacketPlayOutRelEntityMoveLook(int entity_id, byte DX, byte DY, byte DZ, byte yaw, byte pitch, boolean isOnGround) {
-        return new PacketWrapper(new PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
+        return new PacketWrapper(new PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
     }
 
     public static PacketWrapper PacketPlayOutRespawn(Environment dimension, Difficulty diff, GameMode gamemode) {
-        return new PacketWrapper(new PacketPlayOutRespawn(WorldDataConverter.getEnvironment(dimension), WorldDataConverter.getDifficulty(diff), WorldDataConverter.getLevel(), WorldDataConverter.getGameMode(gamemode)));
+        return new PacketWrapper(new PacketPlayOutRespawn(WorldDataConverter.getEnvironment(dimension), (EnumDifficulty) DifficultyWrapper.toMinecraftDiffuculty(diff), WorldDataConverter.getLevel(), WorldDataConverter.getGameMode(gamemode)));
     }
 
     public static PacketWrapper PacketPlayOutSetSlot(int window_id, short slot, ItemStack stack) {
@@ -240,12 +236,12 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutSpawnPosition(int xLoc, int yLoc, int zLoc) {
-        return new PacketWrapper(new PacketPlayOutSpawnPosition(xLoc, yLoc, zLoc));
+        return new PacketWrapper(new PacketPlayOutSpawnPosition(new BlockPosition(xLoc, yLoc, zLoc)));
     }
 
-    public static PacketWrapper PacketPlayOutStatistics(Map<String, Integer> list) {
-        return new PacketWrapper(new PacketPlayOutStatistic(list));
-    }
+    //public static PacketWrapper PacketPlayOutStatistics(Map<String, Integer> list) {
+    //    return new PacketWrapper(new PacketPlayOutStatistic(list));
+    //}
 
     public static PacketWrapper PacketPlayOutTabComplete(String[] tabs) {
         return new PacketWrapper(new PacketPlayOutTabComplete(tabs));
@@ -259,8 +255,16 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutUpdateHealth(health_level, food_level, saturation));
     }
 
-    public static PacketWrapper PacketPlayOutUpdateSign(int xLoc, int yLoc, int zLoc, String[] lines) {
-        return new PacketWrapper(new PacketPlayOutUpdateSign(xLoc, yLoc, zLoc, lines));
+    public static PacketWrapper PacketPlayOutUpdateSign(World world, int xLoc, int yLoc, int zLoc, String[] lines) {
+        return new PacketWrapper(new PacketPlayOutUpdateSign(((CraftWorld) world).getHandle(), new BlockPosition(xLoc, yLoc, zLoc), toComponents(lines)));
+    }
+
+    private static IChatBaseComponent[] toComponents(String[] lines) {
+        IChatBaseComponent[] out = new IChatBaseComponent[lines.length];
+        for(int i=0; i<lines.length; i++) {
+            out[i] = new ChatComponentText(lines[i]);
+        }
+        return out;
     }
 
     public static PacketWrapper PacketPlayOutUpdateTime(long ticks_living, long day_time) {
@@ -271,8 +275,8 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutWindowItems(window_id, convertItemStacks(stacks)));
     }
 
-    private static List<net.minecraft.server.v1_7_R4.ItemStack> convertItemStacks(List<ItemStack> stacks) {
-        List<net.minecraft.server.v1_7_R4.ItemStack> nms_stacks = new ArrayList<>();
+    private static List<net.minecraft.server.v1_8_R3.ItemStack> convertItemStacks(List<ItemStack> stacks) {
+        List<net.minecraft.server.v1_8_R3.ItemStack> nms_stacks = new ArrayList<>();
 
         for (ItemStack stack : stacks) {
             try {
@@ -284,9 +288,8 @@ public class Packets {
         return nms_stacks;
     }
 
-    public static PacketWrapper PacketPlayOutWorldParticles(Particle type, float x, float y, float z, float offSetX, float offSetY, float offSetZ, float particleData, int amount) {
-        return new PacketWrapper(new PacketPlayOutWorldParticles(type.getName(), x, y, z, offSetX, offSetY, offSetZ, particleData, amount));
-    }
-
+    //public static PacketWrapper PacketPlayOutWorldParticles(Particle type, float x, float y, float z, float offSetX, float offSetY, float offSetZ, float particleData, int amount) {
+    //    return new PacketWrapper(new PacketPlayOutWorldParticles(EnumParticle.valueOf(type.getName().toUpperCase()), x, y, z, offSetX, offSetY, offSetZ, particleData, amount));
+    //}
 
 }

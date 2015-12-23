@@ -1,12 +1,13 @@
 package pl.kamcio96.packetapi.api.collections;
 
-import net.minecraft.server.v1_7_R4.EnumDifficulty;
-import net.minecraft.server.v1_7_R4.EnumGamemode;
-import net.minecraft.server.v1_7_R4.WorldType;
+import net.minecraft.server.v1_8_R3.EnumDifficulty;
+import net.minecraft.server.v1_8_R3.WorldSettings.EnumGamemode;
+import net.minecraft.server.v1_8_R3.WorldType;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 
+@SuppressWarnings("Class to remove")
 public class WorldDataConverter {
 
     public static int getEnvironment(Environment env) {

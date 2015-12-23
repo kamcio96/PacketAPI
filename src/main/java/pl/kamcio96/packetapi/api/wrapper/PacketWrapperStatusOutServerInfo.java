@@ -1,8 +1,9 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
-import net.minecraft.server.v1_7_R4.ChatComponentText;
-import net.minecraft.server.v1_7_R4.ServerPing;
-import net.minecraft.util.com.mojang.authlib.GameProfile;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.server.v1_8_R3.ChatComponentText;
+import net.minecraft.server.v1_8_R3.ServerPing;
+import net.minecraft.server.v1_8_R3.ServerPing;
 import pl.kamcio96.packetapi.api.PacketWrapper;
 
 @Deprecated

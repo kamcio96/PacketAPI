@@ -1,12 +1,12 @@
 package pl.kamcio96.packetapi;
 
-import net.minecraft.server.v1_7_R4.MinecraftServer;
-import net.minecraft.server.v1_7_R4.NetworkManager;
-import net.minecraft.server.v1_7_R4.ServerConnection;
-import net.minecraft.util.io.netty.bootstrap.ServerBootstrap;
-import net.minecraft.util.io.netty.channel.ChannelFuture;
-import net.minecraft.util.io.netty.channel.nio.NioEventLoopGroup;
-import net.minecraft.util.io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_8_R3.NetworkManager;
+import net.minecraft.server.v1_8_R3.ServerConnection;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
@@ -20,8 +20,8 @@ public class PacketAPIServerConnection extends ServerConnection {
 
     public PacketAPIServerConnection(MinecraftServer minecraftserver) {
         super(minecraftserver);
-        try {
 
+        try {
             Field e = ServerConnection.class.getDeclaredField("e");
             e.setAccessible(true);
             Field f = ServerConnection.class.getDeclaredField("f");
