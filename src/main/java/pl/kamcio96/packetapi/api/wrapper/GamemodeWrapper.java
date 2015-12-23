@@ -6,13 +6,11 @@ import org.bukkit.GameMode;
 public class GamemodeWrapper {
 
     public static GameMode toBukkitGamemode(Object enumGamemode) {
-        //not sure if this works. //TO-DO test it
         EnumGamemode gamemode = (EnumGamemode) enumGamemode;
         return GameMode.valueOf(gamemode.toString().toUpperCase());
     }
 
     public static Object toMinecraftGameMode(GameMode gamemode) {
-        //not sure if this works. //TO-DO test it
         return EnumGamemode.valueOf(gamemode.toString().toUpperCase());
     }
 }

@@ -9,7 +9,6 @@ public class ItemStackConverter {
         return CraftItemStack.asNMSCopy(stack);
     }
 
-    @SuppressWarnings("deprecation")
     public static ItemStack toBukkitItemStack(Object nms_stack) {
         return CraftItemStack.asBukkitCopy((net.minecraft.server.v1_7_R4.ItemStack) nms_stack);
     }
