@@ -1,4 +1,4 @@
-package pl.kamcio96.packetapi.collections;
+package pl.kamcio96.packetapi.api.collections;
 
 import net.minecraft.server.v1_7_R4.EnumDifficulty;
 import net.minecraft.server.v1_7_R4.EnumGamemode;

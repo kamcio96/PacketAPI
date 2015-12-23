@@ -1,7 +1,7 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
 import pl.kamcio96.packetapi.api.PacketWrapper;
-import pl.kamcio96.packetapi.collections.Animation;
+import pl.kamcio96.packetapi.api.collections.Animation;
 
 @Deprecated
 @SuppressWarnings(value = {"TODO class"})

@@ -1,4 +1,4 @@
-package pl.kamcio96.packetapi.collections;
+package pl.kamcio96.packetapi.api.collections;
 
 public enum Animation {
     SWING_ARM(0), DAMAGE(1), LEAVE_BED(2), EAT_FOOD(3), CRITICAL_EFFECT(4), MAGICAL_CRIT_EFFECT(5), CROUCH(104), UNCROUCH(105);

@@ -15,12 +15,14 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import pl.kamcio96.packetapi.collections.*;
-import pl.kamcio96.packetapi.collections.Slot;
+import pl.kamcio96.packetapi.api.collections.*;
+import pl.kamcio96.packetapi.api.collections.Slot;
+import pl.kamcio96.packetapi.api.wrapper.BlockWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Packets {
 
@@ -53,16 +55,7 @@ public class Packets {
     }
 
     public static PacketWrapper PacketOutBlockAction(int xLoc, int yLoc, int zLoc, int data1, int data2, Material material) {
-        try {
-            return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, Block.getById(material.getId()), data2, data1));
-        } catch (Exception e) {
-            try {
-                return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, (Block) Block.class.getMethod("e", int.class).invoke(material.getId()), data2, data1));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutBlockAction(xLoc, yLoc, zLoc, (Block) BlockWrapper.toMinecraftBlock(material), data2, data1));
     }
 
     public static PacketWrapper PacketPlayOutBlockBreakAnimation(int breakId, int xLoc, int yLoc, int zLoc, byte destroy_stage) {
@@ -146,45 +139,18 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutMap(int damage_value, byte[] data, byte scale) {
-        try {
-            return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
-        } catch (Exception e) {
-            try {
-                return new PacketWrapper(PacketPlayOutMap.class.getConstructor(int.class, byte.class).newInstance(damage_value, data));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutMap(damage_value, data, scale));
     }
 
     public static PacketWrapper PacketPlayOutMapChunk(Chunk chunk, boolean flag, int paramInt, int version) {
-        try {
-            return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt, version));
-        } catch (Exception e) {
-            try { // R3, R2
-                return new PacketWrapper(PacketPlayOutMapChunk.class.getConstructor(net.minecraft.server.v1_7_R4.Chunk.class, boolean.class, int.class).newInstance(((CraftChunk) chunk).getHandle(), flag, paramInt));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt, version));
     }
 
-    public static PacketWrapper PacketPlayOutMapChunkBulk(List<Chunk> chunks, int version) {
-        try {
-            return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks), version));
-        } catch (Exception e) {
-            try { // R3, R2
-                return new PacketWrapper(PacketPlayOutMapChunkBulk.class.getConstructor(List.class).newInstance(convert(chunks)));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+    public static PacketWrapper PacketPlayOutMapChunkBulk(Set<Chunk> chunks, int version) {
+        return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks), version));
     }
 
-    private static List<net.minecraft.server.v1_7_R4.Chunk> convert(List<Chunk> chunks) {
+    private static List<net.minecraft.server.v1_7_R4.Chunk> convert(Set<Chunk> chunks) {
         List<net.minecraft.server.v1_7_R4.Chunk> list = new ArrayList<net.minecraft.server.v1_7_R4.Chunk>();
         for (Chunk chunk : chunks) {
             list.add(((CraftChunk) chunk).getHandle());
@@ -196,7 +162,8 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutMultiBlockChange(block_count, data, ((CraftChunk) chunk).getHandle()));
     }
 
-    public static PacketWrapper PacketPlayOutNamedEntitySpawn(HumanEntity e) {
+    // TODO
+    /* static PacketWrapper PacketPlayOutNamedEntitySpawn(HumanEntity e) {
         return new PacketWrapper(new PacketPlayOutNamedEntitySpawn(((CraftHumanEntity) e).getHandle()));
     }
 
@@ -214,7 +181,7 @@ public class Packets {
         }
 
         return new PacketWrapper(new PacketPlayOutNamedEntitySpawn(entity));
-    }
+    }*/
 
     public static PacketWrapper PacketPlayOutNamedSoundEffect(String name, int locX, int locY, int locZ, float volume, float pitch) {
         return new PacketWrapper(new PacketPlayOutNamedSoundEffect(name, locX, locY, locZ, volume, pitch));
@@ -305,7 +272,7 @@ public class Packets {
     }
 
     private static List<net.minecraft.server.v1_7_R4.ItemStack> convertItemStacks(List<ItemStack> stacks) {
-        List<net.minecraft.server.v1_7_R4.ItemStack> nms_stacks = new ArrayList<net.minecraft.server.v1_7_R4.ItemStack>();
+        List<net.minecraft.server.v1_7_R4.ItemStack> nms_stacks = new ArrayList<>();
 
         for (ItemStack stack : stacks) {
             try {

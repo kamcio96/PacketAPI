@@ -1,4 +1,4 @@
-package pl.kamcio96.packetapi.collections;
+package pl.kamcio96.packetapi.api.collections;
 
 public enum Slot {
     HELD(0), BOOTS(1), LEGGINGS(2), CHESTPLATE(3), HELMET(4);
