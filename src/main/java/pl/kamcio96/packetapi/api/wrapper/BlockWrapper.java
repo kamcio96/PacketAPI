@@ -1,17 +1,17 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
-import net.minecraft.server.v1_7_R4.Block;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R4.util.CraftMagicNumbers;
 
 public class BlockWrapper {
 
-    public static Material makeMaterialFromBlock(Object block) {
+    public static Material toBukkitMaterial(Object block) {
         //not sure if this works. //TO-DO test it
-        return Material.valueOf(((Block) block).getName().toUpperCase());
+        return CraftMagicNumbers.getMaterial((net.minecraft.server.v1_7_R4.Block) block);
     }
 
     @SuppressWarnings("deprecation")
-    public static Object makeBlock(Material mat) {
-        return Block.getById(mat.getId());
+    public static Object toMinecraftBlock(Material mat) {
+        return CraftMagicNumbers.getBlock(mat);
     }
 }

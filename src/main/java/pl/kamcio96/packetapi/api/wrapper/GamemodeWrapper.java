@@ -11,7 +11,7 @@ public class GamemodeWrapper {
         return GameMode.valueOf(gamemode.toString().toUpperCase());
     }
 
-    public static Object toEnumGameMode(GameMode gamemode) {
+    public static Object toMinecraftGameMode(GameMode gamemode) {
         //not sure if this works. //TO-DO test it
         return EnumGamemode.valueOf(gamemode.toString().toUpperCase());
     }

@@ -1,35 +1,19 @@
 package pl.kamcio96.packetapi.api;
 
-import net.minecraft.server.v1_7_R4.ItemStack;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 
 import java.lang.reflect.Field;
 
 public class Reflection {
 
-    private static Field handle;
     private static String version;
 
     static {
-
         version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-
-        try {
-            handle = CraftItemStack.class.getDeclaredField("handle");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("This version of PacketAPI is outdated, please report to the author.");
-        }
     }
 
-    public static ItemStack getHandle(CraftItemStack stack) {
-        try {
-            return (ItemStack) handle.get(stack);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String getPackageVersion() {
+        return version;
     }
 
     // easy way to get NMS classes

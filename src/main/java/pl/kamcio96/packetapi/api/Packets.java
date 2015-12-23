@@ -1,4 +1,4 @@
-package pl.kamcio96.packetapi;
+package pl.kamcio96.packetapi.api;
 
 import net.minecraft.server.v1_7_R4.*;
 import net.minecraft.server.v1_7_R4.Item;
@@ -15,8 +15,6 @@ import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import pl.kamcio96.packetapi.api.PacketWrapper;
-import pl.kamcio96.packetapi.api.Reflection;
 import pl.kamcio96.packetapi.collections.*;
 import pl.kamcio96.packetapi.collections.Slot;
 
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Packet {
+public class Packets {
 
     public static PacketWrapper PacketPlayOutAbilities(boolean isInvulnerable, boolean isFlying, boolean canFly, boolean canInstantlyBuild, float flySpeed, float walkSpeed) {
         PlayerAbilities abilities = new PlayerAbilities();
@@ -100,7 +98,7 @@ public class Packet {
     }
 
     public static PacketWrapper PacketPlayOutEntityEquipment(int entity_id, Slot type, ItemStack stack) {
-        return new PacketWrapper(new PacketPlayOutEntityEquipment(entity_id, type.getId(), Reflection.getHandle((CraftItemStack) stack)));
+        return new PacketWrapper(new PacketPlayOutEntityEquipment(entity_id, type.getId(), CraftItemStack.asNMSCopy(stack)));
     }
 
     public static PacketWrapper PacketPlayOutEntityHeadRotation(Entity entity, byte yaw) {
@@ -116,16 +114,7 @@ public class Packet {
     }
 
     public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean bool, boolean bool2) {
-        try {
-            return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool, bool2));
-        } catch (Exception e) {
-            try {
-                return new PacketWrapper(PacketPlayOutEntityTeleport.class.getConstructor(int.class, int.class, int.class, int.class, byte.class, byte.class).newInstance(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F))));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool, bool2));
     }
 
     public static PacketWrapper PacketPlayOutEntityVelocity(int entity_id, Entity e) {
@@ -248,29 +237,11 @@ public class Packet {
     }
 
     public static PacketWrapper PacketPlayOutRelEntityMove(int entity_id, byte DX, byte DY, byte DZ, boolean isOnGround) {
-        try { // R3, R2
-            return new PacketWrapper(new net.minecraft.server.v1_7_R4.PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
-        } catch (Exception e) {
-            try {
-                return new PacketWrapper(PacketPlayOutRelEntityMove.class.getConstructor(int.class, byte.class, byte.class, byte.class).newInstance(entity_id, DX, DY, DZ));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutRelEntityMove(entity_id, DX, DY, DZ, isOnGround));
     }
 
     public static PacketWrapper PacketPlayOutRelEntityMoveLook(int entity_id, byte DX, byte DY, byte DZ, byte yaw, byte pitch, boolean isOnGround) {
-        try {
-            return new PacketWrapper(new PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
-        } catch (Exception e) {
-            try {
-                return new PacketWrapper(PacketPlayOutRelEntityMoveLook.class.getConstructor(int.class, byte.class, byte.class, byte.class, byte.class, byte.class).newInstance(entity_id, DX, DY, DZ, yaw, pitch));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return null;
-            }
-        }
+        return new PacketWrapper(new PacketPlayOutRelEntityMoveLook(entity_id, DX, DY, DZ, yaw, pitch, isOnGround));
     }
 
     public static PacketWrapper PacketPlayOutRespawn(Environment dimension, Difficulty diff, GameMode gamemode) {
@@ -278,7 +249,7 @@ public class Packet {
     }
 
     public static PacketWrapper PacketPlayOutSetSlot(int window_id, short slot, ItemStack stack) {
-        return new PacketWrapper(new PacketPlayOutSetSlot(window_id, slot, Reflection.getHandle((CraftItemStack) stack)));
+        return new PacketWrapper(new PacketPlayOutSetSlot(window_id, slot, CraftItemStack.asNMSCopy(stack)));
     }
 
     public static PacketWrapper PacketPlayOutSpawnEntity(Entity e, int type) {
@@ -338,7 +309,7 @@ public class Packet {
 
         for (ItemStack stack : stacks) {
             try {
-                nms_stacks.add(Reflection.getHandle((CraftItemStack) stack));
+                nms_stacks.add(CraftItemStack.asNMSCopy(stack));
             } catch (Exception e) {
                 e.printStackTrace();
             }
