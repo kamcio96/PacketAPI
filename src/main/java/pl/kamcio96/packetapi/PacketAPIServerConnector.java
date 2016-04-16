@@ -5,7 +5,7 @@ import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_9_R1.*;
 
 public class PacketAPIServerConnector extends ChannelInitializer {
 
@@ -37,6 +37,6 @@ public class PacketAPIServerConnector extends ChannelInitializer {
         conn.getNetworkManagerList().add(networkmanager);
         channel.pipeline().addLast("packetAPI_handler", new PacketAPIHandler(networkmanager));
         channel.pipeline().addLast("packet_handler", networkmanager);
-        networkmanager.a(new HandshakeListener(MinecraftServer.getServer(), networkmanager));
+        networkmanager.setPacketListener(new HandshakeListener(MinecraftServer.getServer(), networkmanager));
     }
 }

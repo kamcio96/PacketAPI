@@ -3,9 +3,9 @@ package pl.kamcio96.packetapi;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
-import net.minecraft.server.v1_8_R3.LoginListener;
-import net.minecraft.server.v1_8_R3.NetworkManager;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
+import net.minecraft.server.v1_9_R1.LoginListener;
+import net.minecraft.server.v1_9_R1.NetworkManager;
+import net.minecraft.server.v1_9_R1.PlayerConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pl.kamcio96.packetapi.api.Connection;
@@ -56,8 +56,8 @@ public class PacketAPIHandler extends ChannelDuplexHandler implements Connection
 
     @Override
     public Player getPlayer() {
-        if (manager.getPacketListener() instanceof PlayerConnection) {
-            return ((PlayerConnection) manager.getPacketListener()).getPlayer();
+        if (manager.i() instanceof PlayerConnection) {
+            return ((PlayerConnection) manager.i()).getPlayer();
         }
         return null;
     }

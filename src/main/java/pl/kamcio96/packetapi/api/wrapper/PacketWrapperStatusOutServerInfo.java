@@ -1,9 +1,9 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_8_R3.ChatComponentText;
-import net.minecraft.server.v1_8_R3.ServerPing;
-import net.minecraft.server.v1_8_R3.ServerPing;
+import net.minecraft.server.v1_9_R1.ChatComponentText;
+import net.minecraft.server.v1_9_R1.ServerPing;
+import net.minecraft.server.v1_9_R1.ServerPing;
 import pl.kamcio96.packetapi.api.PacketWrapper;
 
 @Deprecated
@@ -43,10 +43,10 @@ public class PacketWrapperStatusOutServerInfo extends PacketWrapper {
     }
 
     public String getVersionName() {
-        return this.ping.c().a();
+        return this.ping.getServerData().a();
     }
 
     public int getVersionProtocol() {
-        return this.ping.c().b();
+        return this.ping.getServerData().getProtocolVersion();
     }
 }

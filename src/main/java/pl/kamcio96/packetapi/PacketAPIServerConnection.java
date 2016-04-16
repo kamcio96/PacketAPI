@@ -2,11 +2,16 @@ package pl.kamcio96.packetapi;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.epoll.Epoll;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import net.minecraft.server.v1_8_R3.MinecraftServer;
-import net.minecraft.server.v1_8_R3.NetworkManager;
-import net.minecraft.server.v1_8_R3.ServerConnection;
+import net.minecraft.server.v1_9_R1.LazyInitVar;
+import net.minecraft.server.v1_9_R1.MinecraftServer;
+import net.minecraft.server.v1_9_R1.NetworkManager;
+import net.minecraft.server.v1_9_R1.ServerConnection;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
@@ -14,25 +19,20 @@ import java.util.List;
 
 public class PacketAPIServerConnection extends ServerConnection {
 
-    private List superEList;
-    private List superFList;
-    private NioEventLoopGroup superCEventGroup;
+    private List superHList;
+    private List superGList;
 
     public PacketAPIServerConnection(MinecraftServer minecraftserver) {
         super(minecraftserver);
 
         try {
-            Field e = ServerConnection.class.getDeclaredField("e");
+            Field e = ServerConnection.class.getDeclaredField("h");
             e.setAccessible(true);
-            Field f = ServerConnection.class.getDeclaredField("f");
+            Field f = ServerConnection.class.getDeclaredField("g");
             f.setAccessible(true);
 
-            superEList = (List) e.get(this);
-            superFList = (List) f.get(this);
-
-            Field c = ServerConnection.class.getDeclaredField("c");
-            c.setAccessible(true);
-            superCEventGroup = (NioEventLoopGroup) c.get(null);
+            superHList = (List) e.get(this);
+            superGList = (List) f.get(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,17 +40,30 @@ public class PacketAPIServerConnection extends ServerConnection {
 
     @Override
     public void a(InetAddress inetaddress, int port) {
+
+        Class<? extends ServerSocketChannel> socketClass;
+        LazyInitVar<? extends EventLoopGroup> lazyinitvar;
+        if(Epoll.isAvailable() && MinecraftServer.getServer().ae()) {
+            socketClass = EpollServerSocketChannel.class;
+            lazyinitvar = ServerConnection.b;
+            LogManager.getLogger().info("Using epoll channel type");
+        } else {
+            socketClass = NioServerSocketChannel.class;
+            lazyinitvar = ServerConnection.a;
+            LogManager.getLogger().info("Using default channel type");
+        }
+
         try {
             System.out.println("[PacketAPI] Bind custom ServerConnection on " + (inetaddress != null ? inetaddress.getHostAddress() : "") + ":" + port);
             ServerBootstrap sb = new ServerBootstrap();
-            sb.channel(NioServerSocketChannel.class);
+            sb.channel(socketClass);
             sb.childHandler(new PacketAPIServerConnector(this));
-            sb.group(superCEventGroup);
+            sb.group(lazyinitvar.c());
             sb.localAddress(inetaddress, port);
             ChannelFuture f = sb.bind().syncUninterruptibly();
 
-            synchronized (superEList) {
-                superEList.add(f);
+            synchronized (superGList) {
+                superGList.add(f);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +71,7 @@ public class PacketAPIServerConnection extends ServerConnection {
     }
 
     public List<NetworkManager> getNetworkManagerList() {
-        return (List<NetworkManager>) superFList;
+        return (List<NetworkManager>) superHList;
     }
 
 }

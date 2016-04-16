@@ -1,15 +1,15 @@
 package pl.kamcio96.packetapi.api;
 
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Chunk;
 import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.*;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_9_R1.entity.*;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
@@ -39,11 +39,11 @@ public class Packets {
     }
 
     public static PacketWrapper PacketPlayOutAttachEntity(Entity entity1, Entity entity2) {
-        return new PacketWrapper(new PacketPlayOutAttachEntity(0, ((CraftEntity) entity2).getHandle(), ((CraftEntity) entity1).getHandle()));
+        return new PacketWrapper(new PacketPlayOutAttachEntity(((CraftEntity) entity2).getHandle(), ((CraftEntity) entity1).getHandle()));
     }
 
     public static PacketWrapper PacketPlayOutAttachEntity(Entity entity1, Entity entity2, int data) {
-        return new PacketWrapper(new PacketPlayOutAttachEntity(data, ((CraftEntity) entity2).getHandle(), ((CraftEntity) entity1).getHandle()));
+        return new PacketWrapper(new PacketPlayOutAttachEntity(((CraftEntity) entity2).getHandle(), ((CraftEntity) entity1).getHandle()));
     }
 
     public static PacketWrapper PacketPlayOutBed(Player p, int bedX, int bedY, int bedZ) {
@@ -82,12 +82,26 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutEntityDestroy(entity_ids));
     }
 
-    public static PacketWrapper PacketPlayOutEntityEffect(LivingEntity e, int effect_id, int duration, int amplification, int ambient) {
-        return new PacketWrapper(new PacketPlayOutEntityEffect(((CraftEntity) e).getHandle().getId(), new MobEffect(effect_id, amplification, ambient)));
+    public static PacketWrapper PacketPlayOutEntityEffect(LivingEntity e, int effect_id, int duration, int amplification, boolean ambient) {
+        return PacketPlayOutEntityEffect(e, effect_id, duration, amplification, ambient, true);
+    }
+
+    public static PacketWrapper PacketPlayOutEntityEffect(LivingEntity e, int effect_id, int duration, int amplification, boolean ambient, boolean showparticle) {
+        return new PacketWrapper(new PacketPlayOutEntityEffect(((CraftEntity) e).getHandle().getId(), new MobEffect(MobEffectList.fromId(effect_id), duration, amplification, ambient, showparticle)));
+    }
+
+    private static EnumItemSlot convert(Slot slot) {
+        for(EnumItemSlot nmsslot : EnumItemSlot.values()) {
+            if(nmsslot.b() == slot.getId()) {
+                return nmsslot;
+            }
+        }
+
+        throw new RuntimeException("Report to author!");
     }
 
     public static PacketWrapper PacketPlayOutEntityEquipment(int entity_id, Slot type, ItemStack stack) {
-        return new PacketWrapper(new PacketPlayOutEntityEquipment(entity_id, type.getId(), CraftItemStack.asNMSCopy(stack)));
+        return new PacketWrapper(new PacketPlayOutEntityEquipment(entity_id,  convert(type), CraftItemStack.asNMSCopy(stack)));
     }
 
     public static PacketWrapper PacketPlayOutEntityHeadRotation(Entity entity, byte yaw) {
@@ -102,8 +116,16 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutEntityStatus(((CraftEntity) entity).getHandle(), type.getId()));
     }
 
-    public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean bool) {
-        return new PacketWrapper(new PacketPlayOutEntityTeleport(entity_id, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), ((byte) (int) (loc.getYaw() * 256.0F / 360.0F)), ((byte) (int) (loc.getPitch() * 256.0F / 360.0F)), bool));
+    public static PacketWrapper PacketPlayOutEntityTeleport(int entity_id, Location loc, boolean onGround) {
+        PacketWrapper wrapper = new PacketWrapper(new PacketPlayOutEntityTeleport());
+        wrapper.setValue(entity_id, "a");
+        wrapper.setValue(loc.getX(), "b");
+        wrapper.setValue(loc.getY(), "c");
+        wrapper.setValue(loc.getZ(), "d");
+        wrapper.setValue((byte)((int)(loc.getYaw() * 256.0F / 360.0F)), "e");
+        wrapper.setValue((byte)((int)(loc.getPitch() * 256.0F / 360.0F)), "f");
+        wrapper.setValue(onGround, "g");
+        return wrapper;
     }
 
     public static PacketWrapper PacketPlayOutEntityVelocity(int entity_id, Entity e) {
@@ -142,18 +164,6 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), flag, paramInt));
     }
 
-    public static PacketWrapper PacketPlayOutMapChunkBulk(Set<Chunk> chunks) {
-        return new PacketWrapper(new PacketPlayOutMapChunkBulk(convert(chunks)));
-    }
-
-    private static List<net.minecraft.server.v1_8_R3.Chunk> convert(Set<Chunk> chunks) {
-        List<net.minecraft.server.v1_8_R3.Chunk> list = new ArrayList<net.minecraft.server.v1_8_R3.Chunk>();
-        for (Chunk chunk : chunks) {
-            list.add(((CraftChunk) chunk).getHandle());
-        }
-        return list;
-    }
-
     public static PacketWrapper PacketPlayOutMultiBlockChange(Chunk chunk, int block_count, short[] data) {
         return new PacketWrapper(new PacketPlayOutMultiBlockChange(block_count, data, ((CraftChunk) chunk).getHandle()));
     }
@@ -180,7 +190,11 @@ public class Packets {
     }*/
 
     public static PacketWrapper PacketPlayOutNamedSoundEffect(String name, int locX, int locY, int locZ, float volume, float pitch) {
-        return new PacketWrapper(new PacketPlayOutNamedSoundEffect(name, locX, locY, locZ, volume, pitch));
+        return new PacketWrapper(new PacketPlayOutNamedSoundEffect(SoundEffect.a.get(new MinecraftKey(name)), SoundCategory.NEUTRAL, locX, locY, locZ, volume, pitch));
+    }
+
+    public static PacketWrapper PacketPlayOutNamedSoundEffect(String name, String category, int locX, int locY, int locZ, float volume, float pitch) {
+        return new PacketWrapper(new PacketPlayOutNamedSoundEffect(SoundEffect.a.get(new MinecraftKey(name)), SoundCategory.a(category), locX, locY, locZ, volume, pitch));
     }
 
     public static PacketWrapper PacketPlayOutOpenSignEditor(int locX, int locY, int locZ) {
@@ -195,8 +209,8 @@ public class Packets {
     //    return new PacketWrapper(new PacketPlayOutOpenWindow(window_id, inventory_title, new ChatComponentText(inventory_title), slot_size, provided_title, horse_entity_id));
     //}
 
-    public static PacketWrapper PacketPlayOutPosition(int locX, int locY, int locZ, int yaw, int pitch) {
-        return new PacketWrapper(new PacketPlayOutPosition(locX, locY, locZ, yaw, pitch, new HashSet<PacketPlayOutPosition.EnumPlayerTeleportFlags>()));
+    public static PacketWrapper PacketPlayOutPosition(int locX, int locY, int locZ, int yaw, int pitch, int teleportId) {
+        return new PacketWrapper(new PacketPlayOutPosition(locX, locY, locZ, yaw, pitch, new HashSet<PacketPlayOutPosition.EnumPlayerTeleportFlags>(), teleportId));
     }
 
     public static PacketWrapper PacketPlayOutRelEntityMove(int entity_id, byte DX, byte DY, byte DZ, boolean isOnGround) {
@@ -275,8 +289,8 @@ public class Packets {
         return new PacketWrapper(new PacketPlayOutWindowItems(window_id, convertItemStacks(stacks)));
     }
 
-    private static List<net.minecraft.server.v1_8_R3.ItemStack> convertItemStacks(List<ItemStack> stacks) {
-        List<net.minecraft.server.v1_8_R3.ItemStack> nms_stacks = new ArrayList<>();
+    private static List<net.minecraft.server.v1_9_R1.ItemStack> convertItemStacks(List<ItemStack> stacks) {
+        List<net.minecraft.server.v1_9_R1.ItemStack> nms_stacks = new ArrayList<>();
 
         for (ItemStack stack : stacks) {
             try {

@@ -1,7 +1,7 @@
 package pl.kamcio96.packetapi.api.collections;
 
 public enum Slot {
-    HELD(0), BOOTS(1), LEGGINGS(2), CHESTPLATE(3), HELMET(4);
+    HELD(0), MAIN_HAND(0), OFF_HAND(1), BOOTS(2), LEGGINGS(3), CHESTPLATE(4), HELMET(5);
 
     private int id;
 

@@ -1,6 +1,6 @@
 package pl.kamcio96.packetapi;
 
-import net.minecraft.server.v1_8_R3.MinecraftServer;
+import net.minecraft.server.v1_9_R1.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
