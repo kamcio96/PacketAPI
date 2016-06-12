@@ -1,7 +1,7 @@
 package pl.kamcio96.packetapi.api;
 
-import net.minecraft.server.v1_9_R2.Packet;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import net.minecraft.server.v1_10_R1.Packet;
+import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;

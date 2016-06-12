@@ -7,10 +7,10 @@ import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import net.minecraft.server.v1_9_R2.LazyInitVar;
-import net.minecraft.server.v1_9_R2.MinecraftServer;
-import net.minecraft.server.v1_9_R2.NetworkManager;
-import net.minecraft.server.v1_9_R2.ServerConnection;
+import net.minecraft.server.v1_10_R1.LazyInitVar;
+import net.minecraft.server.v1_10_R1.MinecraftServer;
+import net.minecraft.server.v1_10_R1.NetworkManager;
+import net.minecraft.server.v1_10_R1.ServerConnection;
 import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Field;

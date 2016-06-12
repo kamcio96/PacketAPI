@@ -1,6 +1,6 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
-import net.minecraft.server.v1_9_R2.WorldSettings.EnumGamemode;
+import net.minecraft.server.v1_10_R1.EnumGamemode;
 import org.bukkit.GameMode;
 
 public class GamemodeWrapper {
