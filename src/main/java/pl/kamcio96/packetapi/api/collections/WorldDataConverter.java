@@ -1,8 +1,8 @@
 package pl.kamcio96.packetapi.api.collections;
 
-import net.minecraft.server.v1_9_R1.EnumDifficulty;
-import net.minecraft.server.v1_9_R1.WorldSettings.EnumGamemode;
-import net.minecraft.server.v1_9_R1.WorldType;
+import net.minecraft.server.v1_9_R2.EnumDifficulty;
+import net.minecraft.server.v1_9_R2.WorldSettings.EnumGamemode;
+import net.minecraft.server.v1_9_R2.WorldType;
 import org.bukkit.Difficulty;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;

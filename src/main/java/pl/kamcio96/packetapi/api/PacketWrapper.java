@@ -1,7 +1,7 @@
 package pl.kamcio96.packetapi.api;
 
-import net.minecraft.server.v1_9_R1.Packet;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
+import net.minecraft.server.v1_9_R2.Packet;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -24,7 +24,9 @@ public class PacketWrapper {
                 f.set(this.packet, value);
                 return;
             } catch (Exception ex) {
-                e = ex;
+                if (e == null) {
+                    e = ex;
+                }
             }
         }
         throw new RuntimeException(e);
@@ -39,7 +41,9 @@ public class PacketWrapper {
                 f.setAccessible(true);
                 return f.get(this.packet);
             } catch (Exception ex) {
-                e = ex;
+                if (e == null) {
+                    e = ex;
+                }
             }
         }
         throw new RuntimeException(e);

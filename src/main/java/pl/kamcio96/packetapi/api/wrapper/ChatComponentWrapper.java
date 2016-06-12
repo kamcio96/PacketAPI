@@ -1,6 +1,6 @@
 package pl.kamcio96.packetapi.api.wrapper;
 
-import net.minecraft.server.v1_9_R1.ChatComponentText;
+import net.minecraft.server.v1_9_R2.ChatComponentText;
 
 public class ChatComponentWrapper {
 
